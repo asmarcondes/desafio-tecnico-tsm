@@ -2,8 +2,10 @@ import {
 	criarAgendamento,
 	alterarStatus,
 	listarAgendamentos,
+	removerAgendamentosAntigos,
 } from "../services/agendamentoService";
 import { Agendamento } from "../models/agendamento";
+import { addDays } from "date-fns";
 
 describe("Agendamento Service", () => {
 	let agendamento: Agendamento;
@@ -149,5 +151,57 @@ describe("Agendamento Service - Filtros", () => {
 		);
 		expect(agendamentos.length).toBe(1);
 		expect(agendamentos[0].id).toBe("3");
+	});
+});
+
+describe("Agendamento Service - Remover Agendamentos Antigos", () => {
+	let agendamento1: Agendamento;
+	let agendamento2: Agendamento;
+	let agendamento3: Agendamento;
+
+	beforeEach(() => {
+		agendamento1 = {
+			id: "1",
+			motoristaNome: "João",
+			motoristaCpf: "12345678900",
+			placaCaminhao: "ABC-1234",
+			numeroContrato: "CT123",
+			dataHora: addDays(new Date(), -4), // Agendamento com 4 dias atrás
+			status: "pendente",
+		};
+
+		agendamento2 = {
+			id: "2",
+			motoristaNome: "Pedro",
+			motoristaCpf: "98765432100",
+			placaCaminhao: "XYZ-5678",
+			numeroContrato: "CT456",
+			dataHora: addDays(new Date(), -2), // Agendamento com 2 dias atrás
+			status: "concluido",
+		};
+
+		agendamento3 = {
+			id: "3",
+			motoristaNome: "Maria",
+			motoristaCpf: "11122233344",
+			placaCaminhao: "JKL-9101",
+			numeroContrato: "CT789",
+			dataHora: new Date(), // Agendamento de hoje
+			status: "atrasado",
+		};
+
+		criarAgendamento(agendamento1);
+		criarAgendamento(agendamento2);
+		criarAgendamento(agendamento3);
+	});
+
+	it("Deve remover agendamentos com mais de 3 dias", () => {
+		removerAgendamentosAntigos();
+		const agendamentos = listarAgendamentos();
+
+		expect(agendamentos.length).toBe(2); // Apenas dois agendamentos devem restar
+		expect(agendamentos.find((a) => a.id === "1")).toBeUndefined(); // Agendamento com 4 dias foi removido
+		expect(agendamentos.find((a) => a.id === "2")).toBeDefined(); // Agendamento com 2 dias continua
+		expect(agendamentos.find((a) => a.id === "3")).toBeDefined(); // Agendamento de hoje continua
 	});
 });

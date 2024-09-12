@@ -26,3 +26,10 @@ export const listarAgendamentos = (d, s, m): Agendamento[] => {
 		return corresponde;
 	});
 };
+
+export const removerAgendamentosAntigos = (): void => {
+	agendamentos = agendamentos.filter((agendamento) => {
+		const diasDeDiferenca = differenceInDays(new Date(), agendamento.dataHora);
+		return diasDeDiferenca <= 3;
+	});
+};

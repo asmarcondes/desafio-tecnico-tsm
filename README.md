@@ -38,6 +38,13 @@ A API fornece uma rota para listar todos os agendamentos e também permite aplic
 - **Status**: Filtrar agendamentos pelo status (`pendente`, `concluído`, `atrasado`, `cancelado`).
 - **CPF do motorista**: Filtrar agendamentos de um motorista específico.
 
+### 4. Excluir Agendamentos Antigos
+
+A API fornece uma rota para excluir todos os agendamentos que possuem mais de 3 dias.
+
+#### Regras:
+- Agendamentos com mais de 3 dias de idade serão removidos.
+
 ### Endpoints
 
 #### Criar Agendamento
@@ -74,6 +81,18 @@ A API fornece uma rota para listar todos os agendamentos e também permite aplic
 	Exemplo:
 	```bash
 	GET /api/agendamentos?data=2024-09-15&status=pendente&motoristaCpf=12345678900
+
+### Excluir Agendamentos Antigos
+- **DELETE** `/api/agendamentos/antigos`
+
+  Exclui todos os agendamentos que possuem mais de 3 dias.
+  
+	Exemplo de resposta:
+	```json
+  {
+	  "message": "Agendamentos com mais de 3 dias foram removidos"
+  }
+	```
 
 ## Executando o Projeto
 
@@ -112,6 +131,7 @@ Os testes cobrem:
 - Criação de agendamentos, com validações das regras.
 - Alteração de status dos agendamentos, com restrições.
 - Listagem de agendamentos, com aplicação de filtros (data, status, CPF do motorista).
+- Exclusão de agendamentos com mais de 3 dias.
 
 ## Estrutura do Projeto
 

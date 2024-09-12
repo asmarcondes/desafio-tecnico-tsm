@@ -28,8 +28,21 @@ export const listarAgendamentos = (d, s, m): Agendamento[] => {
 };
 
 export const removerAgendamentosAntigos = (): void => {
-	agendamentos = agendamentos.filter((agendamento) => {
-		const diasDeDiferenca = differenceInDays(new Date(), agendamento.dataHora);
-		return diasDeDiferenca <= 3;
+	var temp: Agendamento[] = [];
+
+	agendamentos.map((a) => {
+		const diasDeDiferenca = differenceInDays(new Date(), a.dataHora);
+
+		if (diasDeDiferenca <= 3) {
+			for (let i = 0; i < agendamentos.length; i++) {
+				const e = agendamentos[i];
+
+				if (e.id === a.id) {
+					temp[i] = e;
+				}
+			}
+		}
 	});
+
+	agendamentos = temp;	
 };
